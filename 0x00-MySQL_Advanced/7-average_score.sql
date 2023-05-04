@@ -2,6 +2,7 @@
 -- store the average score for a student. Note: An average score can be a decimal.
 -- procedure takes 1 input parameter
 
+drop procedure IF EXISTS ComputeAverageScoreForUser;
 DELIMITER $$ ;
 CREATE PROCEDURE ComputeAverageScoreForUser(IN user_id INT)
 BEGIN
@@ -12,6 +13,6 @@ BEGIN
         WHERE user_id = user_id
     )
     WHERE id = user_id;
-END //
+-- END //
 
 -- DELIMITER ;
