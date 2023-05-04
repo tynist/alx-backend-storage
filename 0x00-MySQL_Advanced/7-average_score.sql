@@ -1,7 +1,6 @@
 -- Script creates a stored procedure ComputeAverageScoreForUser that computes and
 -- store the average score for a student. Note: An average score can be a decimal.
--- procedure takes 1 input parameter user_id and updates the average_score
--- column for the user with the given ID in the users table.
+-- procedure takes 1 input parameter
 
 DELIMITER //
 
