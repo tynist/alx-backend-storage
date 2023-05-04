@@ -1,7 +1,6 @@
 -- Script creates a new 'users' table a given required attributes:
--- id, email, name, and country (country column is set of allowed
-values using an enumeration)
--- The table is only created if it doesn't already exist
+-- id, email, name, country (country column is set of allowed
+-- values using an enumeration)
 
 CREATE TABLE IF NOT EXISTS users (
   id INT AUTO_INCREMENT PRIMARY KEY,
