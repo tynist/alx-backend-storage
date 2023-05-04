@@ -1,5 +1,5 @@
--- Script creates a stored procedure ComputeAverageScoreForUser that computes and
--- store the average score for a student. Note: An average score can be a decimal.
+-- Script creates a stored procedure ComputeAverageScoreForUser 
+-- that computes and store the average score for a student.
 -- procedure takes 1 input parameter
 
 drop procedure IF EXISTS ComputeAverageScoreForUser;
@@ -13,5 +13,3 @@ BEGIN
         WHERE user_id = user_id
     )
     WHERE id = user_id;
-END;$$
-DELIMITER ;
