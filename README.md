@@ -31,36 +31,44 @@ Learning Objectives
 At the end of this project, you are expected to be able to [explain to anyone](https://intranet.alxswe.com/rltoken/NEA0Fr7muHfukl5lziVAhg), **without the help of Google**:
 
 ### General
-How to create tables with constraints
-How to optimize queries by adding indexes
-What is and how to implement stored procedures and functions in MySQL
-What is and how to implement views in MySQL
-What is and how to implement triggers in MySQL
+-  How to create tables with constraints
+-  How to optimize queries by adding indexes
+-  What is and how to implement stored procedures and functions in MySQL
+-  What is and how to implement views in MySQL
+-  What is and how to implement triggers in MySQL
 
 
 Requirements
 ------------
-
 ### General
-All your files will be executed on Ubuntu 18.04 LTS using MySQL 5.7 (version 5.7.30)
-All your files should end with a new line
-All your SQL queries should have a comment just before (i.e. syntax above)
-All your files should start by a comment describing the task
-All SQL keywords should be in uppercase (SELECT, WHERE…)
-A README.md file, at the root of the folder of the project, is mandatory
-The length of your files will be tested using wc
+-  All your files will be executed on Ubuntu 18.04 LTS using `MySQL 5.7` (version 5.7.30)
+-  All your files should end with a new line
+-  All your SQL queries should have a comment just before (i.e. syntax above)
+-  All your files should start by a comment describing the task
+-  All SQL keywords should be in uppercase (`SELECT`, `WHERE`…)
+-  A `README.md` file, at the root of the folder of the project, is mandatory
+-  The length of your files will be tested using `wc`
+
+
 More Info
-Comments for your SQL file:
+---------
+### Comments for your SQL file:
+
+```
 $ cat my_script.sql
 -- 3 first students in the Batch ID=3
 -- because Batch 3 is the best!
 SELECT id, name FROM students WHERE batch_id = 3 ORDER BY created_at DESC LIMIT 3;
 $
-Use “container-on-demand” to run MySQL
-Ask for container Ubuntu 18.04 - Python 3.7
-Connect via SSH
-Or via the WebTerminal
-In the container, you should start MySQL before playing with it:
+```
+
+### Use “container-on-demand” to run MySQL
+-  Ask for container `Ubuntu 18.04 - Python 3.7`
+-  Connect via SSH
+-  Or via the WebTerminal
+-  In the container, you should start MySQL before playing with it:
+
+```
 $ service mysql start
  * MySQL Community Server 5.7.30 is started
 $
@@ -72,9 +80,13 @@ mysql
 performance_schema
 sys
 $
-In the container, credentials are root/root
+```
 
-How to import a SQL dump
+**In the container, credentials are `root/root`**
+
+### How to import a SQL dump
+
+```
 $ echo "CREATE DATABASE hbtn_0d_tvshows;" | mysql -uroot -p
 Enter password: 
 $ curl "https://s3.amazonaws.com/intranet-projects-files/holbertonschool-higher-level_programming+/274/hbtn_0d_tvshows.sql" -s | mysql -uroot -p hbtn_0d_tvshows
@@ -91,19 +103,25 @@ id  name
 7   Suspense
 8   Thriller
 $
+```
+
+
+
 Tasks
-0. We are all unique!
-mandatory
-Write a SQL script that creates a table users following these requirements:
+-----
 
-With these attributes:
-id, integer, never null, auto increment and primary key
-email, string (255 characters), never null and unique
-name, string (255 characters)
-If the table already exists, your script should not fail
-Your script can be executed on any database
-Context: Make an attribute unique directly in the table schema will enforced your business rules and avoid bugs in your application
+### 0\. We are all unique!
 
+Write a SQL script that creates a table `users` following these requirements:
+-  With these attributes:
+   -  `id`, integer, never null, auto increment and primary key
+   -  `email`, string (255 characters), never null and unique
+   -  `name`, string (255 characters)
+-  If the table already exists, your script should not fail
+-  Your script can be executed on any database
+**Context:** *Make an attribute unique directly in the table schema will enforced your business rules and avoid bugs in your application*
+
+```
 bob@dylan:~$ echo "SELECT * FROM users;" | mysql -uroot -p holberton
 Enter password: 
 ERROR 1146 (42S02) at line 1: Table 'holberton.users' doesn't exist
@@ -125,23 +143,27 @@ id  email   name
 1   bob@dylan.com   Bob
 2   sylvie@dylan.com    Sylvie
 bob@dylan:~$ 
-Repo:
+```
 
-GitHub repository: alx-backend-storage
-Directory: 0x00-MySQL_Advanced
-File: 0-uniq_users.sql
-   
-1. In and not out
-mandatory
-Write a SQL script that creates a table users following these requirements:
+**Repo:**
+-  GitHub repository: `alx-backend-storage`
+-  Directory: `0x00-MySQL_Advanced`
+-  File: `0-uniq_users.sql`
 
-With these attributes:
-id, integer, never null, auto increment and primary key
-email, string (255 characters), never null and unique
-name, string (255 characters)
-country, enumeration of countries: US, CO and TN, never null (= default will be the first element of the enumeration, here US)
-If the table already exists, your script should not fail
-Your script can be executed on any database
+
+
+### 1\. In and not out
+
+Write a SQL script that creates a table `users` following these requirements:
+-  With these attributes:
+   -  `id`, integer, never null, auto increment and primary key
+   -  `email`, string (255 characters), never null and unique
+   -  `name`, string (255 characters)
+   -  `country`, enumeration of countries: `US`, `CO` and `TN`, never null (= default will be the first element of the enumeration, here `US`)
+-  If the table already exists, your script should not fail
+-  Your script can be executed on any database
+
+```
 bob@dylan:~$ echo "SELECT * FROM users;" | mysql -uroot -p holberton
 Enter password: 
 ERROR 1146 (42S02) at line 1: Table 'holberton.users' doesn't exist
@@ -167,12 +189,15 @@ id  email   name    country
 2   sylvie@dylan.com    Sylvie  CO
 3   john@dylan.com  John    US
 bob@dylan:~$ 
-Repo:
+```
 
-GitHub repository: alx-backend-storage
-Directory: 0x00-MySQL_Advanced
-File: 1-country_users.sql
-   
+**Repo:**
+-  GitHub repository: `alx-backend-storage`
+-  Directory: `0x00-MySQL_Advanced`
+-  File: `1-country_users.sql`
+
+
+
 2. Best band ever!
 mandatory
 Write a SQL script that ranks country origins of bands, ordered by the number of (non-unique) fans
@@ -875,5 +900,217 @@ Repo:
 GitHub repository: alx-backend-storage
 Directory: 0x00-MySQL_Advanced
 File: 11-need_meeting.sql
-   
-Copyright © 2023 ALX, All rights reserved.
+
+
+
+12. Average weighted score
+#advanced
+Write a SQL script that creates a stored procedure ComputeAverageWeightedScoreForUser that computes and store the average weighted score for a student.
+
+Requirements:
+
+Procedure ComputeAverageScoreForUser is taking 1 input:
+user_id, a users.id value (you can assume user_id is linked to an existing users)
+Tips:
+
+Calculate-Weighted-Average
+bob@dylan:~$ cat 100-init.sql
+-- Initial
+DROP TABLE IF EXISTS corrections;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS projects;
+
+CREATE TABLE IF NOT EXISTS users (
+    id int not null AUTO_INCREMENT,
+    name varchar(255) not null,
+    average_score float default 0,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS projects (
+    id int not null AUTO_INCREMENT,
+    name varchar(255) not null,
+    weight int default 1,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS corrections (
+    user_id int not null,
+    project_id int not null,
+    score float default 0,
+    KEY `user_id` (`user_id`),
+    KEY `project_id` (`project_id`),
+    CONSTRAINT fk_user_id FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT fk_project_id FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE
+);
+
+INSERT INTO users (name) VALUES ("Bob");
+SET @user_bob = LAST_INSERT_ID();
+
+INSERT INTO users (name) VALUES ("Jeanne");
+SET @user_jeanne = LAST_INSERT_ID();
+
+INSERT INTO projects (name, weight) VALUES ("C is fun", 1);
+SET @project_c = LAST_INSERT_ID();
+
+INSERT INTO projects (name, weight) VALUES ("Python is cool", 2);
+SET @project_py = LAST_INSERT_ID();
+
+
+INSERT INTO corrections (user_id, project_id, score) VALUES (@user_bob, @project_c, 80);
+INSERT INTO corrections (user_id, project_id, score) VALUES (@user_bob, @project_py, 96);
+
+INSERT INTO corrections (user_id, project_id, score) VALUES (@user_jeanne, @project_c, 91);
+INSERT INTO corrections (user_id, project_id, score) VALUES (@user_jeanne, @project_py, 73);
+
+bob@dylan:~$ 
+bob@dylan:~$ cat 100-init.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 100-average_weighted_score.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 100-main.sql
+-- Show and compute average weighted score
+SELECT * FROM users;
+SELECT * FROM projects;
+SELECT * FROM corrections;
+
+CALL ComputeAverageWeightedScoreForUser((SELECT id FROM users WHERE name = "Jeanne"));
+
+SELECT "--";
+SELECT * FROM users;
+
+bob@dylan:~$ 
+bob@dylan:~$ cat 100-main.sql | mysql -uroot -p holberton 
+Enter password: 
+id  name    average_score
+1   Bob 0
+2   Jeanne  82
+id  name    weight
+1   C is fun    1
+2   Python is cool  2
+user_id project_id  score
+1   1   80
+1   2   96
+2   1   91
+2   2   73
+--
+--
+id  name    average_score
+1   Bob 0
+2   Jeanne  79
+bob@dylan:~$ 
+Repo:
+
+GitHub repository: alx-backend-storage
+Directory: 0x00-MySQL_Advanced
+File: 100-average_weighted_score.sql
+
+
+
+
+### 13\. Average weighted score for all!
+
+Write a SQL script that creates a stored procedure `ComputeAverageWeightedScoreForUsers` that computes and store the average weighted score for all students.
+
+**Requirements:**
+-  Procedure `ComputeAverageWeightedScoreForUsers` is not taking any input.
+
+**Tips:**
+[Calculate-Weighted-Average](https://intranet.alxswe.com/rltoken/QHx92mlF43zF6GTEil-Cyw)
+
+```
+bob@dylan:~$ cat 101-init.sql
+-- Initial
+DROP TABLE IF EXISTS corrections;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS projects;
+
+CREATE TABLE IF NOT EXISTS users (
+    id int not null AUTO_INCREMENT,
+    name varchar(255) not null,
+    average_score float default 0,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS projects (
+    id int not null AUTO_INCREMENT,
+    name varchar(255) not null,
+    weight int default 1,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS corrections (
+    user_id int not null,
+    project_id int not null,
+    score float default 0,
+    KEY `user_id` (`user_id`),
+    KEY `project_id` (`project_id`),
+    CONSTRAINT fk_user_id FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+    CONSTRAINT fk_project_id FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE
+);
+
+INSERT INTO users (name) VALUES ("Bob");
+SET @user_bob = LAST_INSERT_ID();
+
+INSERT INTO users (name) VALUES ("Jeanne");
+SET @user_jeanne = LAST_INSERT_ID();
+
+INSERT INTO projects (name, weight) VALUES ("C is fun", 1);
+SET @project_c = LAST_INSERT_ID();
+
+INSERT INTO projects (name, weight) VALUES ("Python is cool", 2);
+SET @project_py = LAST_INSERT_ID();
+
+
+INSERT INTO corrections (user_id, project_id, score) VALUES (@user_bob, @project_c, 80);
+INSERT INTO corrections (user_id, project_id, score) VALUES (@user_bob, @project_py, 96);
+
+INSERT INTO corrections (user_id, project_id, score) VALUES (@user_jeanne, @project_c, 91);
+INSERT INTO corrections (user_id, project_id, score) VALUES (@user_jeanne, @project_py, 73);
+
+bob@dylan:~$ 
+bob@dylan:~$ cat 101-init.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 101-average_weighted_score.sql | mysql -uroot -p holberton 
+Enter password: 
+bob@dylan:~$ 
+bob@dylan:~$ cat 101-main.sql
+-- Show and compute average weighted score
+SELECT * FROM users;
+SELECT * FROM projects;
+SELECT * FROM corrections;
+
+CALL ComputeAverageWeightedScoreForUsers();
+
+SELECT "--";
+SELECT * FROM users;
+
+bob@dylan:~$ 
+bob@dylan:~$ cat 101-main.sql | mysql -uroot -p holberton 
+Enter password: 
+id  name    average_score
+1   Bob 0
+2   Jeanne  0
+id  name    weight
+1   C is fun    1
+2   Python is cool  2
+user_id project_id  score
+1   1   80
+1   2   96
+2   1   91
+2   2   73
+--
+--
+id  name    average_score
+1   Bob 90.6667
+2   Jeanne  79
+bob@dylan:~$ 
+```
+
+**Repo:**
+-  GitHub repository: `alx-backend-storage`
+-  Directory: `0x00-MySQL_Advanced`
+-  File: `101-average_weighted_score.sql`
