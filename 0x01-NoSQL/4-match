@@ -1,2 +1,2 @@
-// All matches
+// script lists all documents with name="Holberton school" in the collection school
 db.school.find({name: "Holberton school"})
