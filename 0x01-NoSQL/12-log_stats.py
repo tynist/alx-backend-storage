@@ -13,7 +13,7 @@ def log_stats():
     logs_collection = client.logs.nginx
 
     # Retrieve the total number of logs
-    total = logs_collection.count_documents({})
+    total = logs_collection.count_docs({})
 
     # Retrieve the count for each HTTP method
     get = logs_collection.count_documents({"method": "GET"})
@@ -23,14 +23,8 @@ def log_stats():
     delete = logs_collection.count_documents({"method": "DELETE"})
 
     # Retrieve the count for a specific method and path
-    path = logs_collection.count_documents({"method": "GET", "path": "/status"})
-
-    # Retrieve the top 10 most present IPs
-    top_ips = logs_collection.aggregate([
-        {"$group": {"_id": "$ip", "count": {"$sum": 1}}},
-        {"$sort": {"count": -1}},
-        {"$limit": 10}
-    ])
+    path = logs_collection.count_documents(
+        {"method": "GET", "path": "/status"})
 
     # Print the retrieved statistics
     print(f"{total} logs")
@@ -41,9 +35,6 @@ def log_stats():
     print(f"\tmethod PATCH: {patch}")
     print(f"\tmethod DELETE: {delete}")
     print(f"{path} status check")
-    print("IPs:")
-    for ip_data in top_ips:
-        print(f"\t{ip_data['_id']}: {ip_data['count']}")
 
 
 if __name__ == "__main__":
