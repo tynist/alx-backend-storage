@@ -3,7 +3,7 @@
 
 Back-end, NoSQL, MongoDB
 
--   By Emmanuel Turlay, Staff Software Engineer at Cruise and Guillaume, CTO at Holberton school
+By Emmanuel Turlay, Staff Software Engineer at Cruise and Guillaume, CTO at Holberton school
 
 
 Resources
