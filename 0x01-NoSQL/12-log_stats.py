@@ -13,17 +13,17 @@ def log_stats():
     logs_collection = client.logs.nginx
 
     # Retrieve the total number of logs
-    total = logs_collection.count_docs({})
+    total = logs_collection.count_documents({})
 
     # Retrieve the count for each HTTP method
-    get = logs_collection.count_docs({"method": "GET"})
-    post = logs_collection.count_docs({"method": "POST"})
-    put = logs_collection.count_docs({"method": "PUT"})
-    patch = logs_collection.count_docs({"method": "PATCH"})
-    delete = logs_collection.count_docs({"method": "DELETE"})
+    get = logs_collection.count_documents({"method": "GET"})
+    post = logs_collection.count_documents({"method": "POST"})
+    put = logs_collection.count_documents({"method": "PUT"})
+    patch = logs_collection.count_documents({"method": "PATCH"})
+    delete = logs_collection.count_documents({"method": "DELETE"})
 
     # Retrieve the count for a specific method and path
-    path = logs_collection.count_docs(
+    path = logs_collection.count_documents(
         {"method": "GET", "path": "/status"})
 
     # Print the retrieved statistics
