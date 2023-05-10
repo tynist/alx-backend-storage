@@ -63,7 +63,7 @@ class Cache:
         Stores the input data in Redis with a randomly generated key.
 
         Args:
-            data: The data to be stored. Can be of type str, bytes, int, or float.
+            data to be stored. Can be of type str, bytes, int, or float.
 
         Returns:
             The randomly generated key used to store the data.
@@ -74,14 +74,14 @@ class Cache:
 
     def get(self, key: str, fn: Optional[Callable] = None) -> UnionOfTypes:
         """
-        Retrieves the stored data from Redis and optionally applies a conversion function.
+        Gets the stored data from Redis and may apply a conversion func
 
         Args:
             key: The key used to retrieve the data from Redis.
             fn: Optional conversion function to apply to the retrieved data.
 
         Returns:
-            The retrieved data, optionally converted based on the provided conversion function.
+            Retrieved data, may converted based on d given conversion func
         """
         data = self._redis.get(key)
         if data is None:
