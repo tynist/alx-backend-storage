@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import redis
 import uuid
 from typing import Union, Optional, Callable
@@ -18,8 +19,45 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    def count_calls(method: Callable) -> Callable:
+        """
+        Decorator that counts the number of times a method is called.
+
+        Args:
+            method: The method being decorated.
+
+        Returns:
+            The wrapped method.
+        """
+        @wraps(method)
+        def wrapper(self, *args, **kwargs):
+            key = method.__qualname__
+            self._redis.incr(key)
+            return method(self, *args, **kwargs)
+        return wrapper
+
+    def replay(self, method: Callable) -> None:
+        """
+        Displays the history of calls for a particular function.
+
+        Args:
+            method: The method to display the history for.
+        """
+        key = method.__qualname__
+        calls = int(self._redis.get(key) or 0)
+
+        print(f"{key} was called {calls} times:")
+
+        for i in range(calls):
+            input_key = f"{key}:input:{i}"
+            output_key = f"{key}:output:{i}"
+
+            inputs = self._redis.get(input_key).decode("utf-8")
+            output = self._redis.get(output_key).decode("utf-8")
+
+            print(f"{key}(*{inputs}) -> {output}")
+
     @count_calls
-    @call_history
     def store(self, data: UnionOfTypes) -> str:
         """
         Stores the input data in Redis with a randomly generated key.
@@ -75,35 +113,3 @@ class Cache:
             The retrieved data as an integer.
         """
         return self.get(key, fn=int)
-
-    def count_calls(method: Callable) -> Callable:
-    @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        key = method.__qualname__
-        self._redis.incr(key)
-        return method(self, *args, **kwargs)
-    return wrapper
-
-    # Decorate the store method with count_calls
-    Cache.store = count_calls(Cache.store)
-
-    def replay(self, method: Callable) -> None:
-        """
-        Displays the history of calls for a particular function.
-
-        Args:
-            method: The method to display the history for.
-        """
-        key = func.__qualname__
-        calls = int(cache._redis.get(key) or 0)
- 
-        print(f"{key} was called {calls} times:")
-  
-        for i in range(calls):
-            input_key = f"{key}:input:{i}"
-            output_key = f"{key}:output:{i}"
-    
-            inputs = cache._redis.get(input_key).decode("utf-8")
-            output = cache._redis.get(output_key).decode("utf-8")
-        
-        print(f"{key}(*{inputs}) -> {output}")
