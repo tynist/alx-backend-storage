@@ -38,13 +38,18 @@ def wrap_requests(fn: Callable) -> Callable:
         result = fn(url)
         redis.setex(f"cached:{url}", 10, result)
         return result
-
     return wrapper
 
 
 @wrap_requests
 def get_page(url: str) -> str:
-    """get page self descriptive
+    """Fetches the HTML content of a web page.
+
+    Args:
+        url: The URL of the web page.
+
+    Returns:
+        The HTML content of the web page
     """
     response = requests.get(url)
     return response.text
