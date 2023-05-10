@@ -18,8 +18,8 @@ def count_calls(method: Callable) -> Callable:
         key = method.__qualname__
         self._redis.incr(key)
         return method(self, *args, **kwargs)
-    
     return wrapper
+
 
 class Cache:
     """
@@ -46,17 +46,17 @@ class Cache:
         key = str(uuid.uuid4())
         self._redis.set(key, data)
         return key
-    
+
     def get(self, key: str, fn: Optional[Callable] = None) -> UnionOfTypes:
         """
-        Retrieves the stored data from Redis and optionally applies a conversion function.
+        Gets stored data from Redis & optionally applies a conversion func
 
         Args:
             key: The key used to retrieve the data from Redis.
             fn: Optional conversion function to apply to the retrieved data.
 
         Returns:
-            The retrieved data, optionally converted based on the provided conversion function.
+            Retrieved data, converted based on given conversion func
         """
         data = self._redis.get(key)
         if data is None:
