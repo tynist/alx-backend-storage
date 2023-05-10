@@ -6,25 +6,6 @@ from functools import wraps
 UnionOfTypes = Union[str, bytes, int, float]
 
 
-def call_history(method: Callable) -> Callable:
-    """
-    Decorator that stores the history of inputs and outputs for a function in Redis.
-    Appends input parameters to a list in Redis and stores the output in another list.
-    """
-    key = method.__qualname__
-    inputs_key = f"{key}:inputs"
-    outputs_key = f"{key}:outputs"
-
-    @wraps(method)
-    def wrapper(self, *args, **kwargs):
-        self._redis.rpush(inputs_key, str(args))
-        output = method(self, *args, **kwargs)
-        self._redis.rpush(outputs_key, str(output))
-        return output
-
-    return wrapper
-
-
 class Cache:
     """
     Cache class that stores data in Redis and provides retrieval methods.
@@ -37,6 +18,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     @call_history
     def store(self, data: UnionOfTypes) -> str:
         """
@@ -82,7 +64,7 @@ class Cache:
         """
         return self.get(key, fn=lambda d: d.decode("utf-8"))
 
-    def get_int(self, key: str) -> int:
+    def get_int(self, key: str) -> Union[int, None]:
         """
         Retrieves an integer from Redis.
 
@@ -94,6 +76,17 @@ class Cache:
         """
         return self.get(key, fn=int)
 
+    def count_calls(method: Callable) -> Callable:
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        key = method.__qualname__
+        self._redis.incr(key)
+        return method(self, *args, **kwargs)
+    return wrapper
+
+    # Decorate the store method with count_calls
+    Cache.store = count_calls(Cache.store)
+
     def replay(self, method: Callable) -> None:
         """
         Displays the history of calls for a particular function.
@@ -101,15 +94,16 @@ class Cache:
         Args:
             method: The method to display the history for.
         """
-        key = method.__qualname__
-        inputs_key = f"{key}:inputs"
-        outputs_key = f"{key}:outputs"
-
-        inputs = self._redis.lrange(inputs_key, 0, -1)
-        outputs = self._redis.lrange(outputs_key, 0, -1)
-
-        num_calls = len(inputs)
-
-        print(f"{key} was called {num_calls} times:")
-        for input_args, output_key in zip(inputs, outputs):
-            print(f"{key}{input_args} -> {output_key}")
+        key = func.__qualname__
+        calls = int(cache._redis.get(key) or 0)
+ 
+        print(f"{key} was called {calls} times:")
+  
+        for i in range(calls):
+            input_key = f"{key}:input:{i}"
+            output_key = f"{key}:output:{i}"
+    
+            inputs = cache._redis.get(input_key).decode("utf-8")
+            output = cache._redis.get(output_key).decode("utf-8")
+        
+        print(f"{key}(*{inputs}) -> {output}")
