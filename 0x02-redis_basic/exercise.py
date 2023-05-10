@@ -1,14 +1,15 @@
+#!/usr/bin/env python3
 import redis
 import uuid
 from typing import Union
 
 UnionOfTypes = Union[str, bytes, int, float]
 
+
 class Cache:
     """
     Cache class that stores data in Redis.
     """
-
 
     def __init__(self):
         """
@@ -22,7 +23,7 @@ class Cache:
         Stores the input data in Redis with a randomly generated key.
 
         Args:
-            data: The data to be stored. Can be of type str, bytes, int, or float.
+            stored data can be of type str, bytes, int, or float.
 
         Returns:
             The randomly generated key used to store the data.
