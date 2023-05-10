@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import redis
 import uuid
 from typing import Union, Optional, Callable
@@ -7,17 +6,22 @@ from functools import wraps
 UnionOfTypes = Union[str, bytes, int, float]
 
 
-def count_calls(method: Callable) -> Callable:
+def call_history(method: Callable) -> Callable:
     """
-    Decorator that counts the number of times a method is called.
-    Increments the count for the method's qualified name in Redis.
-    Returns the value returned by the original method.
+    Decorator that stores the history of inputs and outputs for a function in Redis.
+    Appends input parameters to a list in Redis and stores the output in another list.
     """
+    key = method.__qualname__
+    inputs_key = f"{key}:inputs"
+    outputs_key = f"{key}:outputs"
+
     @wraps(method)
     def wrapper(self, *args, **kwargs):
-        key = method.__qualname__
-        self._redis.incr(key)
-        return method(self, *args, **kwargs)
+        self._redis.rpush(inputs_key, str(args))
+        output = method(self, *args, **kwargs)
+        self._redis.rpush(outputs_key, str(output))
+        return output
+
     return wrapper
 
 
@@ -33,12 +37,13 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @call_history
     def store(self, data: UnionOfTypes) -> str:
         """
         Stores the input data in Redis with a randomly generated key.
 
         Args:
-            stored data can be of type str, bytes, int, or float.
+            data: The data to be stored. Can be of type str, bytes, int, or float.
 
         Returns:
             The randomly generated key used to store the data.
@@ -49,14 +54,14 @@ class Cache:
 
     def get(self, key: str, fn: Optional[Callable] = None) -> UnionOfTypes:
         """
-        Gets stored data from Redis & optionally applies a conversion func
+        Retrieves the stored data from Redis and optionally applies a conversion function.
 
         Args:
             key: The key used to retrieve the data from Redis.
             fn: Optional conversion function to apply to the retrieved data.
 
         Returns:
-            Retrieved data, converted based on given conversion func
+            The retrieved data, optionally converted based on the provided conversion function.
         """
         data = self._redis.get(key)
         if data is None:
@@ -88,3 +93,23 @@ class Cache:
             The retrieved data as an integer.
         """
         return self.get(key, fn=int)
+
+    def replay(self, method: Callable) -> None:
+        """
+        Displays the history of calls for a particular function.
+
+        Args:
+            method: The method to display the history for.
+        """
+        key = method.__qualname__
+        inputs_key = f"{key}:inputs"
+        outputs_key = f"{key}:outputs"
+
+        inputs = self._redis.lrange(inputs_key, 0, -1)
+        outputs = self._redis.lrange(outputs_key, 0, -1)
+
+        num_calls = len(inputs)
+
+        print(f"{key} was called {num_calls} times:")
+        for input_args, output_key in zip(inputs, outputs):
+            print(f"{key}{input_args} -> {output_key}")
